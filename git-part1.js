@@ -34,8 +34,10 @@
 	function Git(name) {
 		this.name = name; // Repo name
 		this.lastCommitId = -1; // Keep track of last commit id.
+		this.branches = []; // List of all branches.
 
-		var master = new Branch('master', null); // null is passed as we don't have any commit yet.
+		var master = new Branch('master', null); // No commit yet, so null is passed.
+		this.branches.push(master); // Store master branch.
 
 		this.HEAD = master; // HEAD points to current branch.
 	}
@@ -54,6 +56,35 @@
 
 		return commit;
 	};
+
+	/**
+	 * Checkout a branch or creates one if not present.
+	 *
+	 * @param  {string} branchName Branch to switch to or create.
+	 * @return {Branch}            Current branch after checkout.
+	 */
+	Git.prototype.checkout = function (branchName) {
+		// Loop through all branches and see if we have a branch
+		// called `branchName`.
+		for (var i = this.branches.length; i--;){
+			if (this.branches[i].name === branchName) {
+				// We found an existing branch
+				console.log('Switched to existing branch: ' + branchName);
+				this.HEAD = this.branches[i];
+				return this;
+			}
+		}
+
+		// If branch was not found, create a new one.
+		var newBranch = new Branch(branchName, this.HEAD.commit);
+		// Store branch.
+		this.branches.push(newBranch);
+		// Update HEAD
+		this.HEAD = newBranch;
+
+		console.log('Switched to new branch: ' + branchName);
+		return this;
+	}
 
 	/**
 	 * Logs history.
