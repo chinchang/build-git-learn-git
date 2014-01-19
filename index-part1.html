@@ -4,10 +4,18 @@
 	<meta charset="UTF-8">
 	<title>Build Git - Learn Git (part 1)</title>
 	<script src="git-part1.js"></script>
-	<script>
-	</script>
 </head>
 <body>
+	<script>
+	// Test #1
+	var repo = new Git('test');
+	repo.commit('Initial commit');
+	repo.commit('Change 1');
 
+	var log = repo.log();
+	console.assert(log.length === 2); // Should have 2 commits.
+	console.assert(!!log[0] && log[0].id === 1); // Commit 1 should be first.
+	console.assert(!!log[1] && log[1].id === 0); // And then Commit 0.
+	</script>
 </body>
 </html>
